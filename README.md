@@ -75,6 +75,10 @@ The workshop walks through a real-time pipeline built step by step:
 Producer (Python) -> Kafka (Redpanda) -> Flink -> PostgreSQL
 ```
 
+<p align="center">
+  <img src="./ressources/pictures/workshop_flow.png" alt="Apache Flink logo" width="500" />
+</p>
+
 Key topics covered:
 
 - Redpanda (Kafka-compatible broker) setup and rationale
