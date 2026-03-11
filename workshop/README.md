@@ -495,6 +495,7 @@ Or via Docker:
 ```bash
 docker compose exec postgres psql -U postgres -d postgres
 ```
+Or VSCode postgres extension with server name : 127.0.0.1
 
 Create a table for our events:
 

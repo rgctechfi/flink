@@ -8,3 +8,38 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Credentials and secrets
+.env
+.env.*
+*.env
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.der
+*.jks
+*.keystore
+**/secrets/
+**/secret/
+**/credentials/
+**/*_credentials.*
+**/*credentials*.json
+
+# Data files and datasets
+data/
+**/data/
+*.parquet
+*.avro
+*.orc
+*.csv
+*.csv.gz
+*.tsv
+*.tsv.gz
+*.jsonl
+*.ndjson
+*.db
+*.sqlite
+*.sqlite3
+*.duckdb
