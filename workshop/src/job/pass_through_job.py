@@ -3,6 +3,7 @@ from pyflink.table import EnvironmentSettings, StreamTableEnvironment
 
 
 def create_processed_events_sink_postgres(t_env):
+    # Define a JDBC sink table in PostgreSQL where processed rides will be stored.
     table_name = 'processed_events'
     sink_ddl = f"""
         CREATE TABLE {table_name} (
@@ -20,11 +21,13 @@ def create_processed_events_sink_postgres(t_env):
             'driver' = 'org.postgresql.Driver'
         );
         """
+    # Register the sink table in the Table Environment.
     t_env.execute_sql(sink_ddl)
     return table_name
 
 
 def create_events_source_kafka(t_env):
+    # Define a Kafka source table that reads JSON messages from the "rides" topic.
     table_name = "events"
     source_ddl = f"""
         CREATE TABLE {table_name} (
@@ -42,22 +45,24 @@ def create_events_source_kafka(t_env):
             'format' = 'json'
         );
         """
+    # Register the source table in the Table Environment.
     t_env.execute_sql(source_ddl)
     return table_name
 
 def log_processing():
-    # Set up the execution environment
+    # Set up the execution environment (DataStream API).
     env = StreamExecutionEnvironment.get_execution_environment()
+    # Enable periodic checkpoints for fault tolerance (every 10 seconds).
     env.enable_checkpointing(10 * 1000)
 
-    # Set up the table environment
+    # Set up the Table API environment in streaming mode.
     settings = EnvironmentSettings.new_instance().in_streaming_mode().build()
     t_env = StreamTableEnvironment.create(env, environment_settings=settings)
     try:
-        # Create Kafka table
+        # Create Kafka source and PostgreSQL sink tables.
         source_table = create_events_source_kafka(t_env)
         postgres_sink = create_processed_events_sink_postgres(t_env)
-        # write records to postgres
+        # Insert rows from Kafka into PostgreSQL, converting epoch millis to TIMESTAMP.
         t_env.execute_sql(
             f"""
                     INSERT INTO {postgres_sink}
@@ -72,8 +77,10 @@ def log_processing():
         ).wait()
 
     except Exception as e:
+        # Print any error that occurs during the streaming insert.
         print("Writing records from Kafka to JDBC failed:", str(e))
 
 
 if __name__ == '__main__':
+    # Run the streaming job.
     log_processing()
