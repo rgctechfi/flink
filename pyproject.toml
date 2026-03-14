@@ -16,4 +16,5 @@ dependencies = [
     "polars>=1.38.1",
     "psycopg2-binary>=2.9.11",
     "pyarrow>=23.0.1",
+    "pyflink>=1.0",
 ]

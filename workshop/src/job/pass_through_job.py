@@ -3,7 +3,7 @@ from pyflink.table import EnvironmentSettings, StreamTableEnvironment
 
 
 def create_processed_events_sink_postgres(t_env):
-    # Define a JDBC sink table in PostgreSQL where processed rides will be stored.
+    # Define a JavaDataBaseConnectivity sink table in PostgreSQL where processed rides will be stored.
     table_name = 'processed_events'
     sink_ddl = f"""
         CREATE TABLE {table_name} (
@@ -40,8 +40,8 @@ def create_events_source_kafka(t_env):
             'connector' = 'kafka',
             'properties.bootstrap.servers' = 'redpanda:29092',
             'topic' = 'rides',
-            'scan.startup.mode' = 'latest-offset',
-            'properties.auto.offset.reset' = 'latest',
+            'scan.startup.mode' = 'earliest-offset',
+            'properties.auto.offset.reset' = 'earliest',
             'format' = 'json'
         );
         """

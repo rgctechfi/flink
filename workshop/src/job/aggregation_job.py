@@ -82,3 +82,10 @@ def log_aggregation():
 
 if __name__ == '__main__':
     log_aggregation()
+
+'''
+Launch:
+docker compose exec jobmanager ./bin/flink run \
+    -py /opt/src/job/aggregation_job.py \
+    --pyFiles /opt/src -d
+'''
