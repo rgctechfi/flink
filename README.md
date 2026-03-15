@@ -1,9 +1,10 @@
 <h1 align="center">
-  <span>𝘼𝙥𝙖𝙘𝙝𝙚 𝙁𝙡𝙞𝙣𝙠</span>
+  <span>𝘼𝙥𝙖𝙘𝙝𝙚 𝙁𝙡𝙞𝙣𝙠 · 𝙆𝙖𝙛𝙠𝙖</span>
 </h1>
 
 <p align="center">
-  <img src="./ressources/pictures/apache_flink_banner.jpg" alt="Apache Flink banner" width="720" />
+  <img src="./ressources/pictures/apache_flink_logo.png" alt="Apache Flink logo" width="300" />
+    <img src="./ressources/pictures/apache_kafka_logo3.png" alt="Apache Flink logo" width="300" />
 </p>
 
 <p align="center">
@@ -14,15 +15,15 @@
 
 This repository consolidates Module 7 (Streaming with Flink) work:
 
-- a full workshop guide to build a streaming pipeline end to end
-- a homework/project brief with the tasks and submission details
+- a full workshop guide to build a streaming pipeline end to end, with code and SQL
+- a homework/project guide with Docker Compose, Flink jobs, and a helper script
 - reference images and a minimal Python project scaffold
 
 ## Environment
 
 From `pyproject.toml`:
 
-- Python `>= 3.13`
+- Python `>= 3.12, < 3.13`
 
 Workshop prerequisites (see `workshop/README.md`):
 
@@ -46,25 +47,99 @@ For the full streaming stack, follow `workshop/README.md`.
 
 - Yellow Taxi November 2025 parquet (workshop examples):
   - `https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-11.parquet`
-- Green Taxi October 2019 CSV (homework):
-  - `https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_2019-10.csv.gz`
+- Green Taxi October 2025 parquet (homework):
+  - `https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2025-10.parquet`
+
+## Tech Stack
+
+<p align="center">
+  <img src="./ressources/pictures/apache_flink_banner.jpg" alt="Apache Flink banner" width="360" />
+</p>
+
+<p align="center">
+  <img src="./ressources/pictures/apache_kafka_banner.jpg" alt="Apache Kafka banner" width="360" />
+</p>
+
+<p align="center">
+  <img src="./ressources/pictures/redpanda_banner.jpg" alt="Redpanda banner" width="360" />
+</p>
+
+<p align="center">
+  <img src="./ressources/pictures/postgres_banner.png" alt="Redpanda banner" width="360" />
+</p>
 
 ## Repository Map
 
 ```text
 .
 ├── README.md
-├── README_spark.md
-├── pyproject.toml
 ├── main.py
+├── pyproject.toml
+├── uv.lock
+├── .python-version
+├── .gitignore
 ├── ressources/
 │   └── pictures/
 │       ├── apache_flink_banner.jpg
-│       └── apache_flink_logo.png
+│       ├── apache_flink_logo.png
+│       ├── apache_kafka_logo3.png
+│       ├── article_kafka_banner.textClipping
+│       ├── redpanda_banner.jpg
+│       ├── redpanda_logo.png
+│       └── workshop_flow.png
 ├── workshop/
-│   └── README.md
+│   ├── README.md
+│   ├── docker-compose.yml
+│   ├── Dockerfile.flink
+│   ├── flink-config.yaml
+│   ├── pyproject.flink.toml
+│   ├── notebooks/
+│   │   └── nyc_yellow_taxi.py
+│   ├── scripts/
+│   │   ├── py/
+│   │   │   └── test.py
+│   │   └── sql/
+│   │       ├── aggregation_table.sql
+│   │       ├── processed_event.sql
+│   │       ├── processed_events_aggregated.sql
+│   │       └── test.sql
+│   └── src/
+│       ├── models.py
+│       ├── consumers/
+│       │   ├── consumer.py
+│       │   └── consumer_postgres.py
+│       ├── producers/
+│       │   ├── producer.py
+│       │   └── producer_realtime.py
+│       └── job/
+│           ├── aggregation_job.py
+│           ├── aggregation_job_demo.py
+│           └── pass_through_job.py
 └── project/
-    └── homework.md
+    ├── README.md
+    ├── docker-compose.yml
+    ├── Dockerfile.flink
+    ├── flink-config.yaml
+    ├── pyproject.flink.toml
+    ├── run_all.sh
+    ├── sql/
+    │   └── create_tables.sql
+    ├── ressources/
+    │   └── pictures/
+    │       ├── q4.png
+    │       ├── q5.png
+    │       └── q6.png
+    └── src/
+        ├── consumers/
+        │   └── consumer_green_trips_count.py
+        ├── producers/
+        │   └── producer_green_trips.py
+        └── job/
+            ├── __init__.py
+            ├── green_trips_common.py
+            ├── green_trips_session_5m_job.py
+            ├── green_trips_tip_hourly_job.py
+            └── green_trips_tumbling_5m_job.py
 ```
 
 ## Workshop Track
@@ -76,7 +151,7 @@ Producer (Python) -> Kafka (Redpanda) -> Flink -> PostgreSQL
 ```
 
 <p align="center">
-  <img src="./ressources/pictures/workshop_flow.png" alt="Apache Flink logo" width="500" />
+  <img src="./ressources/pictures/workshop_flow.png" alt="workshop flow" width="800" />
 </p>
 
 Key topics covered:
@@ -109,11 +184,8 @@ Core tasks:
 - publish the trip dataset to Kafka
 - implement a 5-minute session window with watermarks
 
-Submission details and the full question text are in `project/homework.md`.
-
-<p align="center">
-  <img src="./ressources/pictures/apache_flink_logo.png" alt="Apache Flink logo" width="220" />
-</p>
+The helper script `project/run_all.sh` orchestrates the end-to-end flow,
+and the full questions plus answers live in `project/README.md`.
 
 ## Useful Operational Notes
 
@@ -124,5 +196,10 @@ Submission details and the full question text are in `project/homework.md`.
 ## Related Files
 
 - Workshop guide: `workshop/README.md`
-- Homework brief: `project/homework.md`
+- Workshop code (producers/consumers/jobs): `workshop/src/`
+- Workshop SQL snippets: `workshop/scripts/sql/`
+- Homework guide: `project/README.md`
+- Homework automation: `project/run_all.sh`
+- Homework SQL schema: `project/sql/create_tables.sql`
 - Assets: `ressources/pictures/`
+- Homework assets: `project/ressources/pictures/`
