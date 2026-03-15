@@ -3,8 +3,8 @@
 </h1>
 
 <p align="center">
-  <img src="./ressources/pictures/apache_flink_logo.png" alt="Apache Flink logo" width="300" />
-    <img src="./ressources/pictures/apache_kafka_logo3.png" alt="Apache Flink logo" width="300" />
+  <img src="./ressources/pictures/apache_flink_logo.png" alt="Apache Flink logo" width="200" />
+    <img src="./ressources/pictures/apache_kafka_logo3.png" alt="Apache Flink logo" width="200" />
 </p>
 
 <p align="center">
