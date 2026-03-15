@@ -161,6 +161,12 @@ After the job processes all data, query the results:
 
 Verify that the taskmanager container runs, jobmanager manages and taskmanager execute the work !
 
+```bash
+docker compose exec jobmanager ./bin/flink run \
+  -py /opt/src/job/green_trips_tumbling_5m_job.py \
+  --pyFiles /opt/src -d
+```
+
 ```sql
 SELECT PULocationID, num_trips
 FROM green_trips_tumbling_5m
@@ -191,9 +197,23 @@ with the longest session (most trips in a single session).
 
 How many trips were in the longest session?
 
-- 12
-- 31
-- 51
+```bash
+docker compose exec jobmanager ./bin/flink run \
+  -py /opt/src/job/green_trips_session_5m_job.py \
+  --pyFiles /opt/src -d
+```
+
+SQL query:
+
+```sql
+SELECT PULocationID, num_trips
+FROM green_trips_session_5m
+ORDER BY num_trips DESC
+LIMIT 1;
+```
+
+<img src="ressources/pictures/q5.png" alt="Q5 result" width="600" />
+
 - 81
 
 
@@ -204,50 +224,17 @@ total `tip_amount` per hour (across all locations).
 
 Which hour had the highest total tip amount?
 
-- 2025-10-01 18:00:00
+```bash
+docker compose exec jobmanager ./bin/flink run \
+  -py /opt/src/job/green_trips_tip_hourly_job.py \
+  --pyFiles /opt/src -d
+```
+
+```sql
+SELECT window_start, total_tip_amount
+FROM green_trips_tip_hourly
+ORDER BY total_tip_amount DESC
+LIMIT 1;
+```
+
 - 2025-10-16 18:00:00
-- 2025-10-22 08:00:00
-- 2025-10-30 16:00:00
-
-
-## Submitting the solutions
-
-- Form for submitting: https://courses.datatalks.club/de-zoomcamp-2026/homework/hw7
-
-
-## Learning in public
-
-We encourage everyone to share what they learned.
-Read more about the benefits [here](https://alexeyondata.substack.com/p/benefits-of-learning-in-public-and).
-
-## Example post for LinkedIn
-
-```
-Week 7 of Data Engineering Zoomcamp by @DataTalksClub complete!
-
-Just finished Module 7 - Streaming with PyFlink. Learned how to:
-
-- Set up Redpanda as a Kafka replacement
-- Build Kafka producers and consumers in Python
-- Create tumbling and session windows in Flink
-- Analyze real-time taxi trip data with stream processing
-
-Here's my homework solution: <LINK>
-
-You can sign up here: https://github.com/DataTalksClub/data-engineering-zoomcamp/
-```
-
-## Example post for Twitter/X
-
-```
-Module 7 of Data Engineering Zoomcamp done!
-
-- Kafka producers and consumers
-- PyFlink tumbling and session windows
-- Real-time taxi data analysis
-- Redpanda as Kafka replacement
-
-My solution: <LINK>
-
-Free course by @DataTalksClub: https://github.com/DataTalksClub/data-engineering-zoomcamp/
-```
