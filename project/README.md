@@ -83,7 +83,7 @@ Redpanda Cluster
 ```
 
 <p align="center">
-  <img src="https://img.shields.io/static/v1?label=Answer&message=25.3.9&color=darkgreen" alt="Answer Q1">
+  <img src="https://img.shields.io/static/v1?label=Answer&amp;message=25.3.9&amp;color=darkgreen" alt="Answer Q1">
 </p>
 
 ## Question 2. Sending data to Redpanda
@@ -134,7 +134,7 @@ took 3.52 seconds
 ```
 
 <p align="center">
-  <img src="https://img.shields.io/static/v1?label=Answer&message=10 seconds&color=darkgreen" alt="Answer Q2">
+  <img src="https://img.shields.io/static/v1?label=Answer&amp;message=10%20seconds&amp;color=darkgreen" alt="Answer Q2">
 </p>
 
 ## Question 3. Consumer - trip distance
@@ -153,7 +153,7 @@ trips with distance > 5.0: 8506
 ```
 
 <p align="center">
-  <img src="https://img.shields.io/static/v1?label=Answer&message=8506&color=darkgreen" alt="Answer Q3">
+  <img src="https://img.shields.io/static/v1?label=Answer&amp;message=8506&amp;color=darkgreen" alt="Answer Q3">
 </p>
 
 ## Part 2: PyFlink (Questions 4-6)
@@ -225,7 +225,7 @@ Which `PULocationID` had the most trips in a single 5-minute window?
 Adjust the image size by changing the `width` value above (e.g., `width="400"`).
 
 <p align="center">
-  <img src="https://img.shields.io/static/v1?label=Answer&message=74&color=darkgreen" alt="Answer Q4">
+  <img src="https://img.shields.io/static/v1?label=Answer&amp;message=74&amp;color=darkgreen" alt="Answer Q4">
 </p>
 
 ## Question 5. Session window - longest streak
@@ -260,7 +260,7 @@ LIMIT 1;
 <img src="ressources/pictures/q5.png" alt="Q5 result" width="450" />
 
 <p align="center">
-  <img src="https://img.shields.io/static/v1?label=Answer&message=81&color=darkgreen" alt="Answer Q5">
+  <img src="https://img.shields.io/static/v1?label=Answer&amp;message=81&amp;color=darkgreen" alt="Answer Q5">
 </p>
 
 
@@ -287,5 +287,5 @@ LIMIT 1;
 <img src="ressources/pictures/q6.png" alt="Q6 result" width="450" position="center" />
 
 <p align="center">
-  <img src="https://img.shields.io/static/v1?label=Answer&message=2025-10-16 18:00:00&color=darkgreen" alt="Answer Q6">
+  <img src="https://img.shields.io/static/v1?label=Answer&amp;message=2025-10-16%2018%3A00%3A00&amp;color=darkgreen" alt="Answer Q6">
 </p>
