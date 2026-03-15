@@ -34,7 +34,7 @@ COPY flink-config.yaml /opt/flink/conf/config.yaml
 
 WORKDIR /opt/flink
 
-#Launch the job
+#Launch the job :
 #docker compose exec jobmanager ./bin/flink run \
 #-py /opt/src/job/pass_through_job.py \
 #    --pyFiles /opt/src -d

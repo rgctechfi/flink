@@ -1,64 +1,57 @@
 # Homework
 
-In this homework, we'll practice streaming with Kafka (Redpanda) and PyFlink.
+## Clean Reset & Answering Workflow (Recommended)
 
-We use Redpanda, a drop-in replacement for Kafka. It implements the same
-protocol, so any Kafka client library works with it unchanged.
+If your results keep growing or don’t match the expected answers, it’s almost always due to re-sending data, stale offsets, or leftover results in PostgreSQL. Use this clean reset before answering the questions:
 
-For this homework we will be using Green Taxi Trip data from October 2025:
+1. **Stop running Flink jobs** (Flink UI at http://localhost:8081 → select job → Cancel).
+2. **Delete and recreate the Kafka topic**:
+   ```bash
+   docker compose exec redpanda rpk topic delete green-trips
+   docker compose exec redpanda rpk topic create green-trips
+   ```
+3. **Truncate the PostgreSQL result tables** (if they already exist):
+   ```sql
+   TRUNCATE green_trips_tumbling_5m;
+   TRUNCATE green_trips_session_5m;
+   TRUNCATE green_trips_tip_hourly;
+   ```
+4. **Run the producer once** to send the dataset to Kafka.
+5. **Submit the Flink jobs** (with parallelism = 1).
+6. **Wait 1–2 minutes** for results, then query PostgreSQL.
 
-- [green_tripdata_2025-10.parquet](https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2025-10.parquet)
-
-
-## Setup
-
-We'll use the same infrastructure from the [workshop](../../../07-streaming/workshop/).
-
-Follow the setup instructions: build the Docker image, start the services:
-
-```bash
-cd 07-streaming/workshop/
-docker compose build
-docker compose up -d
-```
-
-This gives us:
-
-- Redpanda (Kafka-compatible broker) on `localhost:9092`
-- Flink Job Manager at http://localhost:8081
-- Flink Task Manager
-- PostgreSQL on `localhost:5432` (user: `postgres`, password: `postgres`)
-
-If you previously ran the workshop and have old containers/volumes,
-do a clean start:
-
-```bash
-docker compose down -v
-docker compose build
-docker compose up -d
-```
-
-Note: the container names (like `workshop-redpanda-1`) assume the
-directory is called `workshop`. If you renamed it, adjust accordingly.
-
+Notes:
+- Re-running the producer without deleting the topic will duplicate messages and inflate results.
+- Restarting Flink jobs with `earliest` will reprocess all messages unless the topic is reset.
+- Make sure parallelism is **1** for this homework (single partition).
 
 ## Question 1. Redpanda version
 
 Run `rpk version` inside the Redpanda container:
 
 ```bash
-docker exec -it workshop-redpanda-1 rpk version
+(flink) rgctechfi@MacBookAir project % docker compose exe redpanda rpk version
 ```
 
 What version of Redpanda are you running?
 
+```bash
+rpk version: v25.3.9
+Git ref:     836b4a36ef6d5121edbb1e68f0f673c2a8a244e2
+Build date:  2026 Feb 26 07 47 54 Thu
+OS/Arch:     linux/arm64
+Go version:  go1.24.3
+
+Redpanda Cluster
+  node-1  v25.3.9 - 836b4a36ef6d5121edbb1e68f0f673c2a8a244e2
+```
 
 ## Question 2. Sending data to Redpanda
 
 Create a topic called `green-trips`:
 
 ```bash
-docker exec -it workshop-redpanda-1 rpk topic create green-trips
+(flink) rgctechfi@MacBookAir flink % uv run python project/src/producers/producer_green_trips.py
 ```
 
 Now write a producer to send the green taxi data to this topic.
@@ -95,10 +88,12 @@ print(f'took {(t1 - t0):.2f} seconds')
 
 How long did it take to send the data?
 
+```bash
+sent 49416 messages to green-trips
+took 3.52 seconds
+```
+
 - 10 seconds
-- 60 seconds
-- 120 seconds
-- 300 seconds
 
 
 ## Question 3. Consumer - trip distance
@@ -110,11 +105,12 @@ Count how many trips have a `trip_distance` greater than 5.0 kilometers.
 
 How many trips have `trip_distance` > 5?
 
-- 6506
-- 7506
+```bash
+(flink) rgctechfi@MacBookAir flink % uv run python project/src/consumers/consumer_green_trips_count.py
+consumed 49416 messages
+trips with distance > 5.0: 8506
+```
 - 8506
-- 9506
-
 
 ## Part 2: PyFlink (Questions 4-6)
 
@@ -163,19 +159,22 @@ Write the results to a PostgreSQL table with columns:
 
 After the job processes all data, query the results:
 
+Verify that the taskmanager container runs, jobmanager manages and taskmanager execute the work !
+
 ```sql
 SELECT PULocationID, num_trips
-FROM <your_table>
+FROM green_trips_tumbling_5m
 ORDER BY num_trips DESC
 LIMIT 3;
 ```
 
 Which `PULocationID` had the most trips in a single 5-minute window?
 
-- 42
+<img src="ressources/pictures/q4.png" alt="Q4 result" width="600" />
+
+Adjust the image size by changing the `width` value above (e.g., `width="400"`).
+
 - 74
-- 75
-- 166
 
 
 ## Question 5. Session window - longest streak

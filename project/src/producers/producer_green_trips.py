@@ -23,7 +23,7 @@ DATETIME_COLUMNS = ["lpep_pickup_datetime", "lpep_dropoff_datetime"]
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Send green taxi trips to Kafka.")
     parser.add_argument("--url", default=DATA_URL, help="Parquet URL to read")
-    parser.add_argument("--topic", default="green-trips", help="Kafka topic name")
+    parser.add_argument("--topic", default="green-trips", help="Kafka topic name") #TOPIC NAME
     parser.add_argument(
         "--bootstrap-server",
         default="localhost:9092",
